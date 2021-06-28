@@ -37,11 +37,36 @@ public class EnemySpawner : MonoBehaviour
     
     private void SpawnWave()
     {
-        
+        wave++;
+
+        var spawnCount = Mathf.RoundToInt(wave * 5f);
+
+        for(var i = 0; i < spawnCount; i++)
+        {
+            var enemyIntensity = Random.Range(0f, 1f);
+
+            CreateEnemy(enemyIntensity);
+        }
     }
     
     private void CreateEnemy(float intensity)
     {
+        var health = Mathf.Lerp(healthMin, healthMax, intensity);
+        var damage = Mathf.Lerp(damageMin, damageMax, intensity);
+        var speed = Mathf.Lerp(speedMin, speedMax, intensity);
 
+        var skinColor = Color.Lerp(Color.white, strongEnemyColor, intensity);
+
+        var spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+
+        var enemy = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
+
+        enemy.Setup(health, damage, speed, speed * 0.3f, skinColor);
+
+        enemies.Add(enemy);
+
+        enemy.OnDeath += () => enemies.Remove(enemy);
+        enemy.OnDeath += () => Destroy(enemy.gameObject, 10f);
+        enemy.OnDeath += () => GameManager.Instance.AddScore(100);
     }
 }

@@ -43,7 +43,7 @@ public class Enemy : LivingEntity
     public float viewDistance = 10f;
     public float patrolSpeed = 3f;
     
-    public LivingEntity targetEntity;
+    [HideInInspector] public LivingEntity targetEntity;
     public LayerMask whatIsTarget;
 
 
